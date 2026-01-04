@@ -127,5 +127,57 @@ View:
 
 The application runs locally and loads pre-trained models without retraining.
 
+# ▶️ Steps to Run the Project Locally
+
+1️⃣ Clone the Repository
+
+    git clone <your-github-repo-link>
+    
+    cd AutoJudge
+
+2️⃣ Install Dependencies
+
+    pip install -r requirements.txt
+
+3️⃣ Run the Web Application
+         
+    streamlit run app.py
+
+4️⃣ Open Browser
+
+Open the URL shown in the terminal:
+
+    http://localhost:8501
+
+# Saved Trained Models
+
+The repository includes all pre-trained models:
+
+1. classifier_stage1.pkl – Hard vs Not-Hard classifier
+
+2. classifier_stage2.pkl – Easy vs Medium classifier
+
+3. regressor.pkl – Random Forest regression model (Zip file included)
+
+4. tfidf.pkl – TF-IDF vectorizer
+
+5. scaler.pkl – Feature scaler
+
+These models are loaded directly by the web app.
+
+# Demo Video
+
+Link:
+
+
+# Author Details
+
+Name: Riddhi Sidana
+
+Enrollment No. 23322023
+
+Program: BS-MS Economics
+
+
 
 
