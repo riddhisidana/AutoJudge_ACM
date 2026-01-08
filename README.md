@@ -10,7 +10,7 @@ _Difficulty Class: Easy / Medium / Hard (Classification)_
 
 _Difficulty Score: A numerical difficulty value (Regression)_
 
-The predictions are made using only the textual information of a programming problem, including its description, input format, and output format.
+    The predictions are made using only the textual information of a programming problem, including its description, input format, and output format.
 The project also includes a local web interface that allows users to paste a new problem description and instantly receive predictions.
 
 # Dataset Used
@@ -40,6 +40,8 @@ _1️. Data Preprocessing_
 
 ✔ Converted text to lowercase
 
+✔ Normalized whitespace
+
 ✔ Handled missing values
 
 ✔ Created additional handcrafted features such as: Text length, Number of mathematical symbols and Frequency of algorithm-related keywords (dp, graph, tree, recursion, binary search)
@@ -50,11 +52,21 @@ _2. Feature Extraction_
 
     n-grams: (1, 3)
 
-    Maximum features: 8000
+    Maximum features: 30000
+    
+    Sublinear term frequency scaling
 
-✔ Numeric features were scaled using StandardScaler
+✔ Handcrafted Numeric Features: To capture problem complexity beyond keywords:
 
-✔ Final feature matrix created by concatenating TF-IDF vectors with numeric features
+Log-scaled text length
+
+Mathematical symbol count
+
+Constraint awareness (e.g., large input sizes, time limits)
+
+Algorithm-specific keyword groups: Dynamic Programming, Graph Algorithms, Data Structures, Mathematics, Geometry, String Algorithms, Greedy Techniques
+
+    ✔ Numeric features were scaled using StandardScaler and combined with TF-IDF features.
 
 _3️. Classification Models_
 
@@ -66,50 +78,58 @@ The following classification models were evaluated:
 
 ✔ Multinomial Naive Bayes (TF-IDF only, baseline)
 
-_Final choice: Linear SVM, due to the best balance between precision, recall, and macro-F1 score._
+    Hyperparameter tuning was performed using GridSearchCV with stratified cross-validation
 
-✔ A hierarchical classification strategy was also explored:
+✅ _Final choice: Tuned Linear SVM, due to the best balance between precision, recall, and macro-F1 score._
 
-_Stage 1: Hard vs Not-Hard_
+Performance (3-Class Classification):
 
-_Stage 2: Easy vs Medium_-
+✅ Accuracy: ~54%
 
-This analysis highlighted strong signals for detecting Hard problems while exposing overlap between Easy and Medium classes.
+✅ Macro F1-score: ~0.50
 
-_4️. Regression Model_
+✅ Hard class recall: ~0.73
+
+    The results highlight the inherent ambiguity between Easy and Medium problems while demonstrating strong detection of Hard problems
+
+
+
+_4️. Regression Model (Difficulty Score)_
+
+Models Evaluated
+
+✔ Linear Regression (baseline)
+
+✔ Gradient Boosting Regressor
 
 ✔ Random Forest Regressor
 
-    Used to predict a continuous difficulty score
+    RandomizedSearchCV was used for hyperparameter tuning of ensemble models
+
+✅Final Regression Model: Random Forest Regressor
+
+Performance:
+
+✅MAE: 1.635
+
+✅RMSE: 1.948
+
+    The model predicts difficulty scores within ±2 points on average, which is reasonable for text-only inference.
 
     Chosen for robustness and ability to model non-linear relationships
 
 _The regression model is independent of the classification model and provides a smoother difficulty estimate._
 
-# 📈 Evaluation Metrics
-_Classification Performance (Linear SVM)_
+    _Note: Difficulty classification is inherently subjective, and significant overlap exists between Easy and Medium problems. Results reflect the realistic performance ceiling for text-only classification._
 
-✔ Accuracy: ~50%
-
-✔ Macro F1-score: ~0.49
-
-✔ Hard class recall: ~0.61
-
-_Note: Difficulty classification is inherently subjective, and significant overlap exists between Easy and Medium problems. Results reflect the realistic performance ceiling for text-only classification._
-
-_Regression Performance (Random Forest)_
-
-✔ Mean Absolute Error (MAE): ~1.541
-
-✔ Root Mean Squared Error (RMSE): ~1.94
-
-Residual analysis shows no systematic bias and stable predictions across difficulty classes.
 
 # 🌐 Web Interface
 
-A Streamlit-based web application is provided that allows users to:
+A Streamlit-based web application is provided that allows users to demonstrate end-to-end functionality.
 
-Paste:
+Features:
+
+✅ Text input boxes for:
 
 Problem Description
 
@@ -117,15 +137,14 @@ Input Description
 
 Output Description
 
-Click Predict Difficulty
+✅ Outputs:
 
-View:
+Predicted Difficulty Class
 
-✔ Predicted Difficulty Class (Easy / Medium / Hard)
+Predicted Difficulty Score
 
-✔ Predicted Difficulty Score (numerical)
+    The app loads pre-trained models only—no retraining occurs at runtime.
 
-The application runs locally and loads pre-trained models without retraining.
 
 # ▶️ Steps to Run the Project Locally
 
@@ -151,23 +170,21 @@ Open the URL shown in the terminal:
 
 # Saved Trained Models
 
-The repository includes all pre-trained models:
+The repository includes all pre-trained models: (Zip file included)
 
-1. classifier_stage1.pkl – Hard vs Not-Hard classifier
+1. final_classifier.pkl – Tuned Linear SVM Classifier
 
-2. classifier_stage2.pkl – Easy vs Medium classifier
+2. final_regressor.pkl – Random Forest regression model 
 
-3. regressor.pkl – Random Forest regression model (Zip file included)
+3. tfidf.pkl – TF-IDF vectorizer
 
-4. tfidf.pkl – TF-IDF vectorizer
-
-5. scaler.pkl – Feature scaler
+4. scaler.pkl – Feature scaler
 
 These models are loaded directly by the web app.
 
 # Demo Video
 
-Link:
+Link: https://drive.google.com/file/d/1YgTEQVDoveiFoCXT10MdJfVfrqNhgVK2/view?usp=sharing
 
 
 # Author Details
